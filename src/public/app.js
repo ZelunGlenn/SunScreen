@@ -33,3 +33,21 @@ document.addEventListener("DOMContentLoaded", () => {
     console.log("ego function is not supported")
   }
 })
+
+
+//Create a Three.JS Scene
+const scene = new THREE.Scene();
+//create a new camera with positions and angles
+const camera = new THREE.PerspectiveCamera(75, window.innerWidth / window.innerHeight, 0.1, 1000);
+
+let object
+
+//OrbitControls allow the camera to move around the scene
+let controls;
+
+//Set which object to render
+//
+let objToRender = 'eye';
+
+const loader = new GLTFLoader();
+

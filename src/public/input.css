@@ -1,3 +1,9 @@
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+
+
+#threeDObject canvas {
+  @apply w-screen h-screen absolute top-0 left-0;
+}
