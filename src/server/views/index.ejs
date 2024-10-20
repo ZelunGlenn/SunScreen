@@ -6,14 +6,20 @@
   <link href="./output.css" rel="stylesheet">
   <title>SunScreen</title>
 </head>
-<body class="">
-  <h1>SunScreen</h1>
-  <p>It's a beautiful day outside. Don't forget to put on sunscreen!</p>
-  <div id="mainDiv">111</div>
+<body class="bg-gray-100">
+  <div class="w-screen h-screen flex flex-col items-center gap-10 pt-40">
+    <h1 class="text-8xl tracking-wider font-bold">SunScreen</h1>
+    <p class="text-gray-400">It's a beautiful day outside. Don't forget to put on sunscreen!</p>
+  </div>
+  
+  
   <main>
     <div id="threeDObject"></div>
     <canvas id="waveCanvas"></canvas>
   </main>
+  <div id="mainDiv" class="opacity-0"></div>
+  <div id="textForUV" class="absolute bottom-32 left-1/2 transform -translate-x-1/2 text-3xl font-medium tracking-wide" style="display: hidden;">
+  </div>
   <script type="module" src="./app.js"></script>
 </body>
 </html>

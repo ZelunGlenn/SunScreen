@@ -60,7 +60,7 @@ app.post('/save-location', async (req, res) => {
     // const severity = rawData.data.result.uv
 
     // test use
-    const severity = 3
+    const severity = 4
     res.send({severity});
 
   } catch(err) {
@@ -71,5 +71,5 @@ app.post('/save-location', async (req, res) => {
 
 
 app.listen(port, () => {
-  console.log(`port live on: https://localhost:${port}`)
+  console.log(`port live on: http://localhost:${port}`)
 })

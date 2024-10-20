@@ -1,3 +1,5 @@
+const textForUV = document.querySelector('#textForUV');
+
 document.addEventListener("DOMContentLoaded", () => {
   if (navigator.geolocation) {
     
@@ -16,7 +18,23 @@ document.addEventListener("DOMContentLoaded", () => {
         .then(data => {
           
           if (data.severity) {
-            document.getElementById('mainDiv').innerText = data.severity
+            const mainDiv = document.getElementById('mainDiv');
+            mainDiv.innerText = data.severity
+            textForUV.style.display = 'block'
+            if (mainDiv.innerText <= 2) {
+              textForUV.innerText = 'Low'
+            } else if ( mainDiv.innerText <= 5) {
+              textForUV.innerText = 'Moderate'
+
+            } else if ( mainDiv.innerText <= 7) {
+              textForUV.innerText = 'High'
+
+            } else if ( mainDiv.innerText <= 10) {
+              textForUV.innerText = 'Very High'
+
+            } else {
+              textForUV.innerText = 'Extreme'
+            }
           } else {
             document.getElementById('mainDiv').innerText = 'Failed to fetch UV data. Please try again later.'
           }
@@ -69,6 +87,9 @@ let waveFrequency = 0.02;        // Frequency of wave crests
 let wavePhase = 0;               // Initial phase of the wave
 
 
+const mainDiv = document.querySelector("#mainDiv");
+
+
 
 const loader = new GLTFLoader()
 
@@ -81,20 +102,20 @@ loader.load(
 
     // Traverse through all meshes in the object to apply transparency
     object.traverse((node) => {
-      if (node.isMesh && node.name === 'Object_2') {
-        console.log(node.name)
-        // Enable transparency for the material
-        node.material.transparent = true;
+      // if (node.isMesh && node.name === 'Object_2') {
+      //   console.log(node.name)
+      //   // Enable transparency for the material
+      //   node.material.transparent = true;
         
-        // Set opacity if you want a uniform transparency across the object
-        node.material.opacity = 0.4; // Example: 80% opacity
+      //   // Set opacity if you want a uniform transparency across the object
+      //   node.material.opacity = 0.4; // Example: 80% opacity
 
-        // If the texture has an alpha map, you can load it here (optional)
-        // node.material.alphaMap = new THREE.TextureLoader().load('path_to_alpha_texture.png');
+      //   // If the texture has an alpha map, you can load it here (optional)
+      //   // node.material.alphaMap = new THREE.TextureLoader().load('path_to_alpha_texture.png');
         
-        // Enable depthWrite if you want to correctly handle overlapping transparent objects
-        node.material.depthWrite = false; 
-      }
+      //   // Enable depthWrite if you want to correctly handle overlapping transparent objects
+      //   node.material.depthWrite = false; 
+      // }
     });
 
 
@@ -134,10 +155,54 @@ const ambientLight = new THREE.AmbientLight(0x333333, ambientIntensity);
 scene.add(ambientLight);
 
 
-function drawWave(time) {
+let lowLevelColor = "#98D600",
+  moderateLevelColor = "#FECD2F",
+  highLevelColor = "#E98600",
+  veryHighLevelColor = "#DE3E2A",
+  extrameLevelColor = "#9161C9",
+  currentColor = "#98D600";
+
+let lowLevelcolorPercent = 2/11,
+  moderateLevelColorPercent = 5/11,
+  highLevelColorPercent = 7/11,
+  veryHighLevelColorPercent = 10/11,
+  extrameLevelColorPercent = 11/11;
+
+function drawWave(time, percent) {
+  let stopPercentage = percent
   waveCtx.clearRect(0, 0, waveCanvas.width, waveCanvas.height); // Clear previous frame
 
-  waveCtx.fillStyle = "#3399ff";  // Color of the wave
+  // calculate the threshold positions in pixels based on the current canvas size
+  let lowLevelY = waveCanvas.height * lowLevelcolorPercent,
+    moderateLevelY = waveCanvas.height * moderateLevelColorPercent,
+    highLevelY = waveCanvas.height * highLevelColorPercent,
+    veryHighLevelY = waveCanvas.height * veryHighLevelColorPercent,
+    extrameLevelY = waveCanvas.height * extrameLevelColorPercent;
+
+  // console.log("lowLevelY: " + lowLevelY)
+  // console.log("moderateLevelY: " + moderateLevelY)
+  // console.log("highLevelY: " + highLevelY)
+  // console.log("veryHighLevelY: " + veryHighLevelY)
+  // console.log("extrameLevelY: " + extrameLevelY)
+
+  // console.log("waveY:" + waveY)
+
+  let waveYforColor = waveCanvas.height - waveY;
+
+  // change the color when passing the threshold
+  if (waveYforColor <= lowLevelY) {
+    currentColor = lowLevelColor;
+  } else if (waveYforColor <= moderateLevelY) {
+    currentColor = moderateLevelColor;
+  } else if (waveYforColor <= highLevelY) {
+    currentColor = highLevelColor;
+  } else if (waveYforColor <= veryHighLevelY) {
+    currentColor = veryHighLevelColor;
+  } else {
+    currentColor = extrameLevelColor;
+  }
+
+  waveCtx.fillStyle = currentColor;  // Color of the wave
   waveCtx.beginPath();
 
   // Draw wave using sine function
@@ -152,7 +217,8 @@ function drawWave(time) {
   waveCtx.fill();
 
   // Move the wave upwards
-  if (waveY > window.innerHeight / 2) {
+  let stopPosition = waveCanvas.height * stopPercentage;
+  if (waveY > stopPosition) {
     waveY -= waveSpeed;  // Rising effect
   }
 
@@ -184,8 +250,11 @@ function animate(time) {
 
   renderer.render(scene, camera);
 
-  if (bottleDropped) {
-    drawWave(time);
+
+  if (mainDiv.innerText !== "") {
+    let percent = 1 - (mainDiv.innerText) / 11;
+    // console.log("percent: " + percent);
+    drawWave(time, percent);
   }
 }
 
