@@ -1,6 +1,15 @@
 const textForUV = document.querySelector('#textForUV');
 
 document.addEventListener("DOMContentLoaded", () => {
+  
+  const header = document.querySelector('#header');
+
+  setTimeout(() => {
+    header.classList.remove('opacity-0');
+    header.classList.add('opacity-100');
+  }, 1000)
+
+
   if (navigator.geolocation) {
     
     navigator.geolocation.getCurrentPosition(
@@ -16,11 +25,17 @@ document.addEventListener("DOMContentLoaded", () => {
         })
         .then(response => response.json())
         .then(data => {
-          
+          if (data.severity === 0) {
+            data.severity = 1;
+          }
           if (data.severity) {
             const mainDiv = document.getElementById('mainDiv');
             mainDiv.innerText = data.severity
-            textForUV.style.display = 'block'
+            console.log(data.severity)
+            setTimeout(() => {
+              textForUV.classList.remove('opacity-0');
+              textForUV.classList.add('opacity-100');
+            }, 1000);
             if (mainDiv.innerText <= 2) {
               textForUV.innerText = 'Low'
             } else if ( mainDiv.innerText <= 5) {

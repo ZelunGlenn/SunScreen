@@ -48,19 +48,20 @@ app.post('/save-location', async (req, res) => {
   const { latitude, longitude } = req.body
   try {
     
-    // const rawData = await axios.get(API_URL + "/uv", {
-    //   params: {
-    //     lat: latitude,
-    //     lng: longitude,
-    //   },
-    //   headers: {
-    //     'x-access-token': process.env.API_KEY
-    //   },
-    // })
-    // const severity = rawData.data.result.uv
-
+    const rawData = await axios.get(API_URL + "/uv", {
+      params: {
+        lat: latitude,
+        lng: longitude,
+      },
+      headers: {
+        'x-access-token': process.env.API_KEY
+      },
+    })
+    const severity = rawData.data.result.uv
+    // console.log(latitude, longitude)
+    // console.log(severity)
     // test use
-    const severity = 4
+    // const severity = 4
     res.send({severity});
 
   } catch(err) {
