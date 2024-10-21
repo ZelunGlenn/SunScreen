@@ -2,7 +2,7 @@
 
 the weather is so HOT  🥵
 
-The project advises people to wear or not wear sunscreen in their location time.
+The project advises people to wear or not wear sunscreen in their location time and address.
 
 
 ## Tech
